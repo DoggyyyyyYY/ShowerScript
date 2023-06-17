@@ -9,14 +9,13 @@ Citizen.CreateThread(function()
 end)
 
 RegisterNetEvent('startShower')
-AddEventHandler('startShower', function()
+AddEventHandler('startShower', function(showerCoords)
     if showering then
         return
     end
 
     showering = true
     local playerPed = PlayerPedId()
-    local showerCoords = vector3(Config.ShowerCoords.x, Config.ShowerCoords.y, Config.ShowerCoords.z)
 
     RequestAnimDict('anim@mp_yacht@shower@male@')
     while not HasAnimDictLoaded('anim@mp_yacht@shower@male@') do
@@ -24,7 +23,7 @@ AddEventHandler('startShower', function()
     end
 
     SetEntityCoords(playerPed, showerCoords.x, showerCoords.y, showerCoords.z, false, false, false, false)
-    SetEntityHeading(playerPed, Config.ShowerHeading)
+    SetEntityHeading(playerPed, showerCoords.heading)
     TaskPlayAnim(playerPed, 'anim@mp_yacht@shower@male@', 'male_shower_idle_a', 8.0, -8.0, -1, 49, 0, false, false, false)
 
     exports['progressBars']:startUI(Config.ShowerDuration, "Taking a shower")
@@ -49,13 +48,15 @@ Citizen.CreateThread(function()
         local playerPed = PlayerPedId()
         local playerCoords = GetEntityCoords(playerPed)
 
-        local distance = #(playerCoords - vector3(Config.ShowerCoords.x, Config.ShowerCoords.y, Config.ShowerCoords.z))
-        if distance < Config.MarkerDistance then
-            DrawMarker(Config.MarkerType, Config.ShowerCoords.x, Config.ShowerCoords.y, Config.ShowerCoords.z - 1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, Config.MarkerColor.a, false, true, 2, nil, nil, false)
-            if distance < Config.MarkerSize.x then
-                ESX.ShowHelpNotification('Press ~INPUT_CONTEXT~ to take a shower')
-                if IsControlJustReleased(0, Config.ShowerControl) and not showering and not IsEntityInWater(playerPed) then
-                    TriggerServerEvent('playerShower')
+        for _, coords in ipairs(Config.ShowerCoords) do
+            local distance = #(playerCoords - vector3(coords.x, coords.y, coords.z))
+            if distance < Config.MarkerDistance then
+                DrawMarker(Config.MarkerType, coords.x, coords.y, coords.z - 1.0, 0.0, 0.0, 0.0, 0, 0.0, 0.0, Config.MarkerSize.x, Config.MarkerSize.y, Config.MarkerSize.z, Config.MarkerColor.r, Config.MarkerColor.g, Config.MarkerColor.b, Config.MarkerColor.a, false, true, 2, nil, nil, false)
+                if distance < Config.MarkerSize.x then
+                    ESX.ShowHelpNotification('Press ~INPUT_CONTEXT~ to take a shower')
+                    if IsControlJustReleased(0, Config.ShowerControl) and not showering and not IsEntityInWater(playerPed) then
+TriggerServerEvent('playerShower', coords.x, coords.y, coords.z, coords.heading)
+                    end
                 end
             end
         end
