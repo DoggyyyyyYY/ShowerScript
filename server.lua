@@ -22,12 +22,8 @@ AddEventHandler('playerStoppedShowering', function()
 end)
 
 
-
-
-
-
 local curVersion = GetResourceMetadata(GetCurrentResourceName(), "version")
-local resourceName = "wasabi_sellshop"
+local resourceName = "shower"
 
 if Config.checkForUpdates then
     CreateThread(function()
@@ -38,7 +34,7 @@ if Config.checkForUpdates then
 
     CreateThread(function()
         while true do
-            PerformHttpRequest("https://api.github.com/repos/wasabirobby/wasabi_sellshop/releases/latest", CheckVersion, "GET")
+            PerformHttpRequest("https://api.github.com/repos/msyjeffrey/ShowerScript/releases/latest", CheckVersion, "GET")
             Wait(3600000)
         end
     end)
@@ -65,7 +61,7 @@ if Config.checkForUpdates then
     GetRepoInformations = function()
         local repoVersion, repoURL, repoBody = nil, nil, nil
 
-        PerformHttpRequest("https://api.github.com/repos/wasabirobby/wasabi_sellshop/releases/latest", function(err, response, headers)
+        PerformHttpRequest("https://api.github.com/repos/msyjeffrey/ShowerScript/releases/latest", function(err, response, headers)
             if err == 200 then
                 local data = json.decode(response)
 
@@ -74,7 +70,7 @@ if Config.checkForUpdates then
                 repoBody = data.body
             else
                 repoVersion = curVersion
-                repoURL = "https://github.com/wasabirobby/wasabi_sellshop"
+                repoURL = "https://github.com/msyjeffrey/ShowerScript"
             end
         end, "GET")
 
