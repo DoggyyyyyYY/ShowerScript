@@ -1,1 +1,1 @@
-Shower Script. Gemaakt door msyjeffrey eigenaar Mystery Roleplay
+Shower Script for fivem. made my Msy Jeffrey. Owner of Mystery Roleplay
