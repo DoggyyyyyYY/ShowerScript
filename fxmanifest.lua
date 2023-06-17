@@ -27,4 +27,8 @@ files {
 }
 
 -- Client script should be loaded after ESX (if you're using it)
-dependency 'es_extended'
+
+dependency {
+'es_extended',
+'progressBars',
+}
